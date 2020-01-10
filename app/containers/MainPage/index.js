@@ -17,10 +17,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import reducer from './reducer';
-import { makeSelectCompletedTasks, makeSelectTasks } from './selectors';
+import {
+  makeSelectCompletedTasks,
+  makeSelectTasks,
+  makeSelectTaskToEdit,
+} from './selectors';
 import AddTaskCard from '../../components/AddTaskCard';
 import ToDoListCard from '../../components/ToDoListCard';
 import DoneListCard from '../../components/DoneListCard';
+import { addTask, editTask, markCompleted, removeTask } from './actions';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -33,7 +38,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function MainPage({ tasks, completedTasks }) {
+export function MainPage({
+  tasks,
+  completedTasks,
+  onAddTask,
+  onMarkCompleted,
+  onRemoveTask,
+  onEditTask,
+  taskToEdit,
+}) {
   useInjectReducer({ key: 'mainPage', reducer });
   const classes = useStyles();
 
@@ -49,9 +62,14 @@ export function MainPage({ tasks, completedTasks }) {
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
-        <AddTaskCard />
-        <ToDoListCard tasks={tasks} />
-        <DoneListCard tasks={completedTasks} />
+        <AddTaskCard addTask={onAddTask} taskToEdit={taskToEdit} />
+        <ToDoListCard
+          tasks={tasks}
+          markCompleted={onMarkCompleted}
+          removeTask={onRemoveTask}
+          editTask={onEditTask}
+        />
+        <DoneListCard tasks={completedTasks} removeTask={onRemoveTask} />
       </div>
     </div>
   );
@@ -60,16 +78,26 @@ export function MainPage({ tasks, completedTasks }) {
 MainPage.propTypes = {
   tasks: PropTypes.array,
   completedTasks: PropTypes.array,
+  onAddTask: PropTypes.func,
+  onMarkCompleted: PropTypes.func,
+  onRemoveTask: PropTypes.func,
+  onEditTask: PropTypes.func,
+  taskToEdit: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   tasks: makeSelectTasks(),
   completedTasks: makeSelectCompletedTasks(),
+  taskToEdit: makeSelectTaskToEdit(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    onAddTask: task => dispatch(addTask(task)),
+    onMarkCompleted: id => dispatch(markCompleted(id)),
+    onRemoveTask: id => dispatch(removeTask(id)),
+    onEditTask: id => dispatch(editTask(id)),
   };
 }
 

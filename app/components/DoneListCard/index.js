@@ -20,11 +20,11 @@ import InfoCard from '../InfoCard';
 
 const useStyles = makeStyles(() => ({
   taskText: {
-    paddingLeft: '55px',
+    paddingLeft: '0px',
   },
 }));
 
-function CustomListItem({ title, text }) {
+function CustomListItem({ task: { title, text, id }, removeTask }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -42,7 +42,11 @@ function CustomListItem({ title, text }) {
           </IconButton>
         </ListItemIcon>
         <ListItemIcon>
-          <IconButton aria-label="delete" size="small">
+          <IconButton
+            aria-label="delete"
+            size="small"
+            onClick={() => removeTask(id)}
+          >
             <DeleteIcon />
           </IconButton>
         </ListItemIcon>
@@ -57,20 +61,20 @@ function CustomListItem({ title, text }) {
 }
 
 CustomListItem.propTypes = {
-  title: PropTypes.string,
-  text: PropTypes.string,
+  task: PropTypes.object,
+  removeTask: PropTypes.func,
 };
 
-function DoneListCard({ tasks }) {
+function DoneListCard({ tasks, removeTask }) {
   return (
     <InfoCard title="Completed" type="completed">
       <List component="nav">
         {tasks.map((item, index) => (
           <>
             <CustomListItem
-              title={item.title}
-              text={item.text}
+              task={item}
               key={`item_${item}_${index + 1}`}
+              removeTask={removeTask}
             />
             <Divider />
           </>
@@ -82,6 +86,7 @@ function DoneListCard({ tasks }) {
 
 DoneListCard.propTypes = {
   tasks: PropTypes.object,
+  removeTask: PropTypes.func,
 };
 
 export default DoneListCard;

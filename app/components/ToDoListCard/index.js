@@ -28,7 +28,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function CustomListItem({ title, text }) {
+function CustomListItem({
+  task: { title, text, id },
+  markCompleted,
+  removeTask,
+  editTask,
+}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -36,7 +41,11 @@ function CustomListItem({ title, text }) {
     <>
       <ListItem>
         <ListItemIcon>
-          <IconButton aria-label="done" size="small">
+          <IconButton
+            aria-label="done"
+            size="small"
+            onClick={() => markCompleted(id)}
+          >
             <CheckCircleIcon />
           </IconButton>
         </ListItemIcon>
@@ -51,12 +60,20 @@ function CustomListItem({ title, text }) {
           </IconButton>
         </ListItemIcon>
         <ListItemIcon>
-          <IconButton aria-label="create" size="small">
+          <IconButton
+            aria-label="create"
+            size="small"
+            onClick={() => editTask(id)}
+          >
             <CreateIcon />
           </IconButton>
         </ListItemIcon>
         <ListItemIcon>
-          <IconButton aria-label="delete" size="small">
+          <IconButton
+            aria-label="delete"
+            size="small"
+            onClick={() => removeTask(id)}
+          >
             <DeleteIcon />
           </IconButton>
         </ListItemIcon>
@@ -71,19 +88,23 @@ function CustomListItem({ title, text }) {
 }
 
 CustomListItem.propTypes = {
-  title: PropTypes.string,
-  text: PropTypes.string,
+  task: PropTypes.object,
+  markCompleted: PropTypes.func,
+  removeTask: PropTypes.func,
+  editTask: PropTypes.func,
 };
 
-function ToDoListCard({ tasks }) {
+function ToDoListCard({ tasks, markCompleted, removeTask, editTask }) {
   return (
     <InfoCard title="To-Do List" type="todo">
       <List component="nav">
         {tasks.map((item, index) => (
           <>
             <CustomListItem
-              title={item.title}
-              text={item.text}
+              task={item}
+              markCompleted={markCompleted}
+              removeTask={removeTask}
+              editTask={editTask}
               key={`item_${item}_${index + 1}`}
             />
             <Divider />
@@ -96,6 +117,9 @@ function ToDoListCard({ tasks }) {
 
 ToDoListCard.propTypes = {
   tasks: PropTypes.object,
+  markCompleted: PropTypes.func,
+  removeTask: PropTypes.func,
+  editTask: PropTypes.func,
 };
 
 export default ToDoListCard;
