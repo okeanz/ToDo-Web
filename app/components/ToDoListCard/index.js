@@ -22,9 +22,18 @@ import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
 import InfoCard from '../InfoCard';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   taskText: {
     paddingLeft: '55px',
+  },
+  checkIcon: {
+    color: theme.palette.primary.main,
+  },
+  editIcon: {
+    color: theme.palette.warning.main,
+  },
+  deleteIcon: {
+    color: theme.palette.error.main,
   },
 }));
 
@@ -46,7 +55,7 @@ function CustomListItem({
             size="small"
             onClick={() => markCompleted(id)}
           >
-            <CheckCircleIcon />
+            <CheckCircleIcon className={classes.checkIcon} />
           </IconButton>
         </ListItemIcon>
         <ListItemText primary={title} color="secondary" />
@@ -65,7 +74,7 @@ function CustomListItem({
             size="small"
             onClick={() => editTask(id)}
           >
-            <CreateIcon />
+            <CreateIcon className={classes.editIcon} />
           </IconButton>
         </ListItemIcon>
         <ListItemIcon>
@@ -74,7 +83,7 @@ function CustomListItem({
             size="small"
             onClick={() => removeTask(id)}
           >
-            <DeleteIcon />
+            <DeleteIcon className={classes.deleteIcon} />
           </IconButton>
         </ListItemIcon>
       </ListItem>

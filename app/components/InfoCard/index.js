@@ -14,7 +14,21 @@ import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 
-const useStyles = makeStyles(() => ({
+const colorSelector = (props, theme) => {
+  console.log('THEME', theme);
+  switch (props.color) {
+    case 'add':
+      return theme.palette.primary.main;
+    case 'edit':
+      return theme.icons.edit;
+    case 'done':
+      return theme.icons.done;
+    default:
+      return 'white';
+  }
+};
+
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: '64px',
     width: '700px',
@@ -29,10 +43,12 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: props => colorSelector(props, theme),
   },
   icon: {
     width: '70%',
     height: '70%',
+    color: 'white',
   },
   title: {
     color: '#424242c7',
@@ -49,24 +65,50 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+function AddPaper() {
+  const classes = useStyles({ color: 'add' });
+  return (
+    <Paper elevation={1} className={classes.paperIcon}>
+      <AddIcon className={classes.icon} />
+    </Paper>
+  );
+}
+
+function EditPaper() {
+  const classes = useStyles({ color: 'edit' });
+  return (
+    <Paper elevation={1} className={classes.paperIcon}>
+      <ListIcon className={classes.icon} />
+    </Paper>
+  );
+}
+
+function DonePaper() {
+  const classes = useStyles({ color: 'done' });
+  return (
+    <Paper elevation={1} className={classes.paperIcon}>
+      <DoneAllIcon className={classes.icon} />
+    </Paper>
+  );
+}
+
 function InfoCard({ title, type, children }) {
   const classes = useStyles();
 
   const getIcon = () => {
-    const icons = {
-      add: <AddIcon className={classes.icon} />,
-      todo: <ListIcon className={classes.icon} />,
-      completed: <DoneAllIcon className={classes.icon} />,
+    const papers = {
+      add: <AddPaper />,
+      todo: <EditPaper />,
+      completed: <DonePaper />,
     };
-    if (icons[type] == null) return icons.add;
-    return icons[type];
+
+    if (papers[type] == null) return papers.add;
+    return papers[type];
   };
 
   return (
     <Paper elevation={3} className={classes.paper}>
-      <Paper elevation={1} className={classes.paperIcon}>
-        {getIcon()}
-      </Paper>
+      {getIcon()}
 
       <Typography variant="h6" className={classes.title}>
         {title}

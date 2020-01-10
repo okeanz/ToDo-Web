@@ -18,9 +18,12 @@ import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
 import InfoCard from '../InfoCard';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   taskText: {
     paddingLeft: '0px',
+  },
+  deleteIcon: {
+    color: theme.palette.error.main,
   },
 }));
 
@@ -47,7 +50,7 @@ function CustomListItem({ task: { title, text, id }, removeTask }) {
             size="small"
             onClick={() => removeTask(id)}
           >
-            <DeleteIcon />
+            <DeleteIcon className={classes.deleteIcon} />
           </IconButton>
         </ListItemIcon>
       </ListItem>
